@@ -1,0 +1,38 @@
+
+import { Outlet } from 'react-router-dom';
+import './App.css';
+import Header from './components/Header';
+import toast, { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
+import { setDataProduct } from './redux/productSlice';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+
+function App() {
+  const dispatch=useDispatch()
+  const productData=useSelector((state)=>state.product)
+  
+  useEffect(()=>{
+    (async()=>{
+      const res = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}product`)
+      const resData=await res.json();
+      console.log(resData)
+      dispatch(setDataProduct(resData))
+    })()
+  },[])
+  console.log(productData)
+  return (
+    <>
+    <Toaster/>
+    <div className=''>
+    <Header/>
+    <main className='py-16 bg-slate-100  min-h-screen min-w-full'>
+    <Outlet />
+    </main>
+    
+    </div>
+    </>
+  );
+}
+
+export default App;
